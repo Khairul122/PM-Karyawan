@@ -98,8 +98,8 @@
             unset($_SESSION['err']);
     }
     ?>
-        <img class="mb-4" src="assets/images/logo-mede-media-softika.png" alt="" width="260" height="72">
-        <h1 class="h4 mb-3 font-weight-normal" >SPK - Profile Matching</h1>
+        <!-- <img class="mb-4" src="assets/images/logo-mede-media-softika.png" alt="" width="260" height="72"> -->
+        <h1 class="h4 mb-3 font-weight-normal" >SPK - Profile Matching <br> PT. Buana Lestari</h1>
         <label for="inputEmail" class="sr-only">Username</label>
         <input type="input" id="inputUsername" name="username" class="form-control" placeholder="Username" required autofocus>
         <span>&nbsp;</span>
@@ -112,8 +112,9 @@
           </label>
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit" name="login">Sign in</button>
-        <p class="mt-4 mb-3 text-muted">&copy; 2020. PT Mede Media Softika</p>
-        <br><center><p>Repost by <a href='https://stokcoding.com/' title='StokCoding.com' target='_blank'>StokCoding.com</a></p></center>
+        <p class="mt-4 mb-3 text-muted">&copy; <?php echo date("Y"); ?>. PT. Buana Lestari</p>
+
+       
       </form>
 
   <?php
