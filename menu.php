@@ -17,7 +17,7 @@
           <li class="nav-item">
             <a class="nav-link" href="?page=pelamar">
               <span class="fas fa-user-friends" style="font-size:14px"></span>
-              Data Pelamar
+              Data Karyawan
             </a>
           </li>
           <li class="nav-item">

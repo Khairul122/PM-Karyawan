@@ -53,7 +53,7 @@ if (isset($_REQUEST['Simpan'])) {
             }
             echo "<script>alert('Data berhasil disimpan!');location='home.php?page=profile';</script>";
         } else {
-            echo "<script>alert('Tidak ada data pelamar.');</script>";
+            echo "<script>alert('Tidak ada data karyawan.');</script>";
         }
     } else {
         echo "<script>alert('Silakan pilih aspek terlebih dahulu.');</script>";
@@ -96,7 +96,7 @@ if (isset($_REQUEST['Simpan'])) {
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>Nama Pelamar</th>
+                                <th>Nama Lengkap</th>
                                 <?php
                                 // Jika aspek dipilih, tampilkan faktor berdasarkan aspek
                                 if (isset($_POST['aspek']) && $_POST['aspek'] != "") {

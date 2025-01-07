@@ -7,7 +7,7 @@
 	    	<thead>
 	    		<tr>
 	    			<td>No</td>
-	    			<td>Nama Pelamar</td>
+	    			<td>Nama Lengkap</td>
 	    			<td>No Handphone</td>
 	    			<td>Email</td>
 	    			<td>Action</td>

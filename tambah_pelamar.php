@@ -1,10 +1,10 @@
 <div class="container">
-		<h2 align="center" style="margin: 30px;">Tambah Data Pelamar</h2>
+		<h2 align="center" style="margin: 30px;">Tambah Data Karyawan</h2>
 		<form method="POST" action="tambah_pelamar_action.php">
 			<div class="row">
 				<div class="col-sm-6 offset-sm-3">
 					<div class="form-group">
-						<label>Nama Pelamar</label>
+						<label>Nama Lengkap</label>
 						<input type="text" name="nama_pelamar" id="nama_pelamar" class="form-control" required="true">
 					</div>
 					<div class="form-group">

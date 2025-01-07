@@ -1,5 +1,5 @@
 <div class="container">
-		<h2 align="center" style="margin: 30px;">Edit Data Pelamar</h2>
+		<h2 align="center" style="margin: 30px;">Edit Data Karyawan</h2>
 		<?php
 			// data difilter terlebih dahulu & base64_decode berguna untuk mendeskripsi id yg sebelumnya di enkripsi/encoding
 			$id = stripslashes(strip_tags(htmlspecialchars(base64_decode($_GET['aa']) ,ENT_QUOTES)));
@@ -20,7 +20,7 @@
 			<div class="row">
 				<div class="col-sm-6 offset-sm-3">
 					<div class="form-group">
-						<label>Nama Pelamar</label>
+						<label>Nama Lengkap</label>
 						<input type="hidden" name="id_pelamar" id="id_pelamar" value="<?php echo $id; ?>">
 						<input type="text" name="nama_pelamar" id="nama_pelamar" class="form-control" value="<?php echo $nama_pelamar; ?>" required="true">
 					</div>
