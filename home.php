@@ -167,7 +167,7 @@ if (empty($_SESSION['id_user'])) {
                     if ($_SESSION['level'] == 1) {
                       echo 'Admin.';
                     } else {
-                      echo 'Petugas Kasir.';
+                      echo 'Pimpinan.';
                     }
                     ?>
                   </strong>

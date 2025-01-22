@@ -385,8 +385,16 @@ $bobot = get_data("SELECT * FROM pm_bobot", $koneksi);
         const finalY = doc.previousAutoTable.finalY + 20;
 
         // Tempat dan tanggal
+        const today = new Date();
+        const options = {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        };
+        const formattedDate = today.toLocaleDateString('id-ID', options);
+
         doc.setFontSize(11);
-        doc.text("Padang, 7 Januari 2025", 140, finalY);
+        doc.text(`Padang, ${formattedDate}`, 140, finalY);
 
         // Bagian pengesahan
         doc.text("Mengetahui,", 140, finalY + 10);
