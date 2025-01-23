@@ -381,6 +381,26 @@ $bobot = get_data("SELECT * FROM pm_bobot", $koneksi);
           }
         });
 
+        // Tabel Top 3
+        const top3 = rankingData.slice(0, 3); // Ambil data Top 3
+        const top3Column = [["No.", "Nama Karyawan", "Nilai Total", "Peringkat"]];
+        const top3Rows = top3.map((item, index) => [
+          (index + 1).toString(),
+          item.nama_pelamar,
+          item.nilai_total.toString(),
+          (index + 1).toString()
+        ]);
+
+        doc.text("Karyawan Terbaik", 105, doc.previousAutoTable.finalY + 10, { align: "center" });
+        doc.autoTable({
+          head: top3Column,
+          body: top3Rows,
+          startY: doc.previousAutoTable.finalY + 15,
+          theme: 'grid',
+          styles: { fontSize: 10, cellPadding: 5 },
+        });
+
+
         // Tanda tangan dengan format baru
         const finalY = doc.previousAutoTable.finalY + 20;
 
