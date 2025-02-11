@@ -1,7 +1,7 @@
 <?php
-$db = mysqli_connect("localhost", "root", "", "penerimaan");
-if ($host) {
-} else {
-  echo "Koneksi gagal!" . mysqli_connect_error();
-  die();
+$conn = new mysqli("localhost", "root", "", "penerimaan");
+
+if ($conn->connect_error) {
+    die("Koneksi gagal: " . $conn->connect_error);
 }
+?>

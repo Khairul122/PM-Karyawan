@@ -223,69 +223,195 @@ $bobot = get_data("SELECT * FROM pm_bobot", $koneksi);
 
     <!-- Perangkingan -->
     <div class="section">
-      <h3>Perangkingan</h3>
-      <table class="table table-bordered table-striped">
+    <h3>Perangkingan</h3>
+    <table class="table table-bordered table-striped">
         <thead>
-          <tr>
-            <th>Rank</th>
-            <th>Nama Karyawan</th>
-            <th>Nilai Total</th>
-          </tr>
+            <tr>
+                <th>Rank</th>
+                <th>Nama Karyawan</th>
+                <th>Nilai Total</th>
+                <th>Aksi</th>
+            </tr>
         </thead>
         <tbody>
-          <?php
-          $ranking = [];
-          foreach ($pelamar as $p) {
-            $total = 0;
-            foreach ($aspek as $a) {
-              $cf = 0;
-              $sf = 0;
-              $cf_count = 0;
-              $sf_count = 0;
-              foreach ($kriteria as $k) {
-                if ($k['id_aspek'] == $a['id_aspek']) {
-                  $value = array_filter($sample, function ($s) use ($p, $k) {
-                    return $s['id_pelamar'] == $p['id_pelamar'] && $s['id_faktor'] == $k['id_faktor'];
-                  });
-                  $value = array_values($value);
-                  $gap = $value ? $value[0]['value'] - $k['target'] : null;
-                  $bobot_value = $gap !== null ? array_values(array_filter($bobot, function ($b) use ($gap) {
-                    return $b['selisih'] == $gap;
-                  })) : null;
-                  $bobot_value = $bobot_value ? $bobot_value[0]['bobot'] : 0;
-                  if ($k['type'] == 'core') {
-                    $cf += $bobot_value;
-                    $cf_count++;
-                  } else {
-                    $sf += $bobot_value;
-                    $sf_count++;
-                  }
+            <?php
+            $ranking = [];
+            foreach ($pelamar as $p) {
+                $total = 0;
+                foreach ($aspek as $a) {
+                    $cf = 0;
+                    $sf = 0;
+                    $cf_count = 0;
+                    $sf_count = 0;
+                    foreach ($kriteria as $k) {
+                        if ($k['id_aspek'] == $a['id_aspek']) {
+                            $value = array_filter($sample, function ($s) use ($p, $k) {
+                                return $s['id_pelamar'] == $p['id_pelamar'] && $s['id_faktor'] == $k['id_faktor'];
+                            });
+                            $value = array_values($value);
+                            $gap = $value ? $value[0]['value'] - $k['target'] : null;
+                            $bobot_value = $gap !== null ? array_values(array_filter($bobot, function ($b) use ($gap) {
+                                return $b['selisih'] == $gap;
+                            })) : null;
+                            $bobot_value = $bobot_value ? $bobot_value[0]['bobot'] : 0;
+                            if ($k['type'] == 'core') {
+                                $cf += $bobot_value;
+                                $cf_count++;
+                            } else {
+                                $sf += $bobot_value;
+                                $sf_count++;
+                            }
+                        }
+                    }
+                    $cf = $cf_count > 0 ? $cf / $cf_count : 0;
+                    $sf = $sf_count > 0 ? $sf / $sf_count : 0;
+                    $total += ($a['bobot_core'] * $cf + $a['bobot_secondary'] * $sf) / 100;
                 }
-              }
-              $cf = $cf_count > 0 ? $cf / $cf_count : 0;
-              $sf = $sf_count > 0 ? $sf / $sf_count : 0;
-              $total += ($a['bobot_core'] * $cf + $a['bobot_secondary'] * $sf) / 100;
+                $ranking[] = [
+                    'id_pelamar' => $p['id_pelamar'],
+                    'nama_pelamar' => $p['nama_pelamar'],
+                    'nilai_total' => round($total, 2)
+                ];
             }
-            $ranking[] = [
-              'nama_pelamar' => $p['nama_pelamar'],
-              'nilai_total' => round($total, 2)
-            ];
-          }
 
-          usort($ranking, function ($a, $b) {
-            return $b['nilai_total'] <=> $a['nilai_total'];
-          });
+            usort($ranking, function ($a, $b) {
+                return $b['nilai_total'] <=> $a['nilai_total'];
+            });
 
-          foreach ($ranking as $rank => $r): ?>
-            <tr>
-              <td><?= $rank + 1 ?></td>
-              <td><?= $r['nama_pelamar'] ?></td>
-              <td><?= $r['nilai_total'] ?></td>
-            </tr>
-          <?php endforeach; ?>
+            foreach ($ranking as $rank => $r): ?>
+                <tr>
+                    <td><?= $rank + 1 ?></td>
+                    <td><?= $r['nama_pelamar'] ?></td>
+                    <td><?= $r['nilai_total'] ?></td>
+                    <td>
+                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#detailModal"
+                                onclick="loadDetail(<?= $r['id_pelamar'] ?>, '<?= $r['nama_pelamar'] ?>')">
+                            Lihat Detail
+                        </button>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
         </tbody>
-      </table>
+    </table>
+</div>
+
+<!-- Modal Bootstrap -->
+<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailModalLabel">Detail Penilaian</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h4 id="modalNama"></h4>
+                <label for="aspekSelect">Pilih Aspek:</label>
+                <select id="aspekSelect" class="form-select" onchange="filterAspek()">
+                    <!-- Opsi akan diisi dengan JavaScript -->
+                </select>
+                <br>
+                <div id="modalDetailContent">
+                    <!-- Data akan dimasukkan melalui JavaScript -->
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+
+<script>
+// Variabel global untuk menyimpan ID pelamar saat modal dibuka
+let selectedPelamarId = null;
+
+function loadDetail(idPelamar, namaPelamar) {
+    selectedPelamarId = idPelamar; // Simpan ID pelamar ke variabel global
+    document.getElementById("modalNama").innerText = "Nama: " + namaPelamar;
+    
+    fetch('get_sample.php?id_pelamar=' + idPelamar)
+        .then(response => response.json())
+        .then(data => {
+            let aspekSet = new Set();
+            let aspekData = {};
+
+            data.forEach(row => {
+                if (!aspekData[row.aspek]) {
+                    aspekData[row.aspek] = [];
+                }
+                aspekData[row.aspek].push(row);
+                aspekSet.add(row.aspek);
+            });
+
+            let aspekSelect = document.getElementById("aspekSelect");
+            aspekSelect.innerHTML = "";
+
+            aspekSet.forEach(aspek => {
+                let option = document.createElement("option");
+                option.value = aspek;
+                option.innerText = aspek;
+                aspekSelect.appendChild(option);
+            });
+
+            // Pilih aspek pertama secara default
+            let firstAspek = aspekSelect.options[0]?.value || "";
+            if (firstAspek) {
+                displayAspekTable(firstAspek, aspekData);
+            }
+        })
+        .catch(error => console.error("Error fetching data:", error));
+}
+
+function displayAspekTable(aspek, aspekData) {
+    let contentDiv = document.getElementById("modalDetailContent");
+    contentDiv.innerHTML = "";
+
+    if (!aspekData[aspek]) return;
+
+    let table = `<table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th></th>`;
+
+    aspekData[aspek].forEach(row => {
+        table += `<th>${row.faktor}</th>`;
+    });
+
+    table += `</tr></thead><tbody><tr><td id="pelamarName"></td>`;
+
+    aspekData[aspek].forEach(row => {
+        table += `<td>${row.value}</td>`;
+    });
+
+    table += `</tr></tbody></table>`;
+
+    contentDiv.innerHTML = table;
+}
+
+function filterAspek() {
+    if (!selectedPelamarId) {
+        console.error("Error: ID pelamar tidak tersedia.");
+        return;
+    }
+
+    let aspek = document.getElementById("aspekSelect").value;
+    fetch('get_sample.php?id_pelamar=' + selectedPelamarId)
+        .then(response => response.json())
+        .then(data => {
+            let aspekData = {};
+            data.forEach(row => {
+                if (!aspekData[row.aspek]) {
+                    aspekData[row.aspek] = [];
+                }
+                aspekData[row.aspek].push(row);
+            });
+
+            displayAspekTable(aspek, aspekData);
+        })
+        .catch(error => console.error("Error fetching data:", error));
+}
+
+
+</script>
+
+
   </div>
   <script>
     // Definisikan data ranking dari PHP ke JavaScript
