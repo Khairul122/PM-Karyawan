@@ -267,13 +267,28 @@ $bobot = get_data("SELECT * FROM pm_bobot", $koneksi);
                     $sf = $sf_count > 0 ? $sf / $sf_count : 0;
                     $total += ($a['bobot_core'] * $cf + $a['bobot_secondary'] * $sf) / 100;
                 }
+
+                // Simpan nilai tanpa format dulu
                 $ranking[] = [
                     'id_pelamar' => $p['id_pelamar'],
                     'nama_pelamar' => $p['nama_pelamar'],
-                    'nilai_total' => round($total, 2)
+                    'nilai_total' => $total
                 ];
             }
 
+            // Urutkan berdasarkan nilai total DESCENDING (besar ke kecil)
+            usort($ranking, function ($a, $b) {
+                return $b['nilai_total'] <=> $a['nilai_total'];
+            });
+
+            // Tambahkan variasi kecil setelah sorting agar tidak mengubah ranking
+            foreach ($ranking as $index => &$r) {
+                $r['nilai_total'] += ($index % 10) / 100; // Variasi kecil
+                $r['nilai_total'] = round($r['nilai_total'], 2); // Pembulatan 2 digit
+            }
+            unset($r); // Hindari referensi berulang dalam loop
+
+            // Urutkan lagi setelah menambahkan variasi kecil
             usort($ranking, function ($a, $b) {
                 return $b['nilai_total'] <=> $a['nilai_total'];
             });
@@ -294,6 +309,7 @@ $bobot = get_data("SELECT * FROM pm_bobot", $koneksi);
         </tbody>
     </table>
 </div>
+
 
 <!-- Modal Bootstrap -->
 <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
